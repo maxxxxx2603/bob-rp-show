@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RP Showroom</title>
+  <link rel="stylesheet" href="/css/main.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.19.0/dist/tabler-icons.min.css">
+</head>
+<body>
+
+<!-- LOGIN -->
+<div id="login-screen">
+  <div class="lc">
+    <div class="lc-logo">
+      <span id="l-icon">🎮</span>
+      <h1 id="l-title">RP Showroom</h1>
+      <p>Panel de gestion multi-bots</p>
+    </div>
+    <div id="l-setup" class="lc-notice" style="display:none">
+      <i class="ti ti-info-circle"></i> Premier accès — créez votre mot de passe admin
+    </div>
+    <div class="lc-field">
+      <label>Mot de passe</label>
+      <div class="lc-input">
+        <i class="ti ti-lock"></i>
+        <input type="password" id="l-pwd" placeholder="••••••••" onkeydown="if(event.key==='Enter')login()">
+        <button class="lc-eye" onclick="toggleEye('l-pwd',this)"><i class="ti ti-eye"></i></button>
+      </div>
+    </div>
+    <button class="lc-btn" onclick="login()"><i class="ti ti-arrow-right"></i> Accéder</button>
+    <div id="l-err" class="lc-err" style="display:none"></div>
+  </div>
+</div>
+
+<!-- APP -->
+<div id="app" style="display:none">
+  <aside class="sb">
+    <div class="sb-logo">
+      <div class="sb-icon" id="sb-icon">🎮</div>
+      <div><div class="sb-title" id="sb-title">RP Showroom</div><div class="sb-sub">Panel Admin</div></div>
+    </div>
+    <nav class="sb-nav">
+      <div class="sb-sec">Vue globale</div>
+      <a class="sb-link active" data-p="dashboard"><i class="ti ti-layout-dashboard"></i>Dashboard</a>
+      <a class="sb-link" data-p="activite"><i class="ti ti-activity"></i>Activité en direct<span class="sb-badge" id="b-act"></span></a>
+      <a class="sb-link" data-p="alertes"><i class="ti ti-bell"></i>Alertes<span class="sb-badge err" id="b-alert"></span></a>
+      <a class="sb-link" data-p="instances"><i class="ti ti-robot"></i>Mes bots<span class="sb-badge" id="b-bots"></span></a>
+      <a class="sb-link" data-p="logs"><i class="ti ti-terminal-2"></i>Logs</a>
+      <div class="sb-sec">Aperçu</div>
+      <a class="sb-link" data-p="demo-restauration"><i class="ti ti-fork"></i>Aperçu Restauration</a>
+      <a class="sb-link" data-p="demo-custom"><i class="ti ti-tool"></i>Aperçu Custom</a>
+      <div class="sb-sec">Paramètres</div>
+      <a class="sb-link" data-p="settings"><i class="ti ti-settings"></i>Panel</a>
+      <a class="sb-link" data-p="securite"><i class="ti ti-shield-lock"></i>Sécurité</a>
+    </nav>
+    <div class="sb-foot">
+      <div class="sb-health" id="sb-health"><span class="h-dot gray"></span><span id="h-label">—</span></div>
+      <button class="sb-logout" onclick="doLogout()"><i class="ti ti-logout"></i></button>
+    </div>
+  </aside>
+
+  <div class="main">
+    <header class="topbar">
+      <span class="tb-title" id="tb-title">Dashboard</span>
+      <div style="display:flex;gap:8px">
+        <button class="tb-btn" onclick="refreshPage()" title="Actualiser"><i class="ti ti-refresh" id="refresh-ic"></i></button>
+      </div>
+    </header>
+    <div class="content" id="content"></div>
+  </div>
+</div>
+
+<!-- MODAL -->
+<div id="modal-back" style="display:none" onclick="if(event.target===this)closeModal()">
+  <div class="modal" id="modal-box">
+    <div class="modal-head">
+      <span id="modal-title" class="modal-title"></span>
+      <button class="tb-btn" onclick="closeModal()"><i class="ti ti-x"></i></button>
+    </div>
+    <div class="modal-body" id="modal-body"></div>
+  </div>
+</div>
+
+<div id="toasts"></div>
+<script src="/js/main.js"></script>
+</body>
+</html>
