@@ -6,7 +6,7 @@ const { uploadsDir } = require('../db/database')
 const app = express()
 app.use(express.json())
 app.use(express.urlencoded({ extended:true }))
-app.use(express.static(require("path").join(__dirname, "../../public")),'public')))
+app.use(express.static(require('path').join(__dirname, '../../public')));
 app.use('/uploads', express.static(require("path").join(__dirname, "../../public")))
 
 app.use(session({
