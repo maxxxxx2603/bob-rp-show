@@ -1,0 +1,72 @@
+{
+  "name": "rp-showroom",
+  "version": "2.0.0",
+  "description": "Panel central de création et gestion de bots GTA RP",
+  "main": "electron-main.js",
+  "scripts": {
+    "start": "node src/index.js",
+    "dev": "nodemon src/index.js",
+    "electron": "electron .",
+    "electron:dev": "NODE_ENV=development electron .",
+    "build:win": "electron-builder --win --x64",
+    "build:mac": "electron-builder --mac",
+    "build:linux": "electron-builder --linux"
+  },
+  "build": {
+    "appId": "com.bobsrp.showroom",
+    "productName": "RP Showroom",
+    "copyright": "Bob's RP",
+    "directories": {
+      "output": "dist"
+    },
+    "files": [
+      "src/**/*",
+      "public/**/*",
+      "modeles/**/*",
+      "electron-main.js",
+      "electron-preload.js",
+      "package.json"
+    ],
+    "extraResources": [],
+    "win": {
+      "target": [
+        { "target": "nsis", "arch": ["x64"] }
+      ],
+      "icon": "public/favicon.ico"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "RP Showroom",
+      "installerHeaderIcon": "public/favicon.ico",
+      "uninstallDisplayName": "RP Showroom"
+    },
+    "mac": {
+      "target": "dmg",
+      "category": "public.app-category.utilities"
+    },
+    "linux": {
+      "target": "AppImage"
+    }
+  },
+  "dependencies": {
+    "discord.js": "^14.15.3",
+    "express": "^4.19.2",
+    "express-session": "^1.18.0",
+    "better-sqlite3": "^11.1.2",
+    "bcryptjs": "^2.4.3",
+    "dotenv": "^16.4.5",
+    "multer": "1.4.5-lts.1",
+    "adm-zip": "0.5.16"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.4",
+    "electron": "^31.0.0",
+    "electron-builder": "^24.13.3"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

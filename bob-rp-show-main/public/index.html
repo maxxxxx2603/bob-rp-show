@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RP Showroom</title>
+  <link rel="stylesheet" href="/css/main.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.19.0/dist/tabler-icons.min.css">
+  <style>
+    /* ── TITLEBAR ELECTRON ── */
+    #electron-titlebar {
+      display: none;
+      -webkit-app-region: drag;
+      position: fixed; top: 0; left: 0; right: 0;
+      height: 38px;
+      background: linear-gradient(90deg, #0d0d1a 0%, #13131f 100%);
+      border-bottom: 1px solid rgba(99,102,241,0.2);
+      z-index: 9999;
+      align-items: center;
+      padding: 0 12px;
+      gap: 8px;
+      user-select: none;
+    }
+    #electron-titlebar .tb-logo { font-size: 16px; }
+    #electron-titlebar .tb-name {
+      font-size: 12px; font-weight: 600; color: #a0aec0;
+      letter-spacing: 0.5px; flex: 1;
+      font-family: 'Segoe UI', sans-serif;
+    }
+    #electron-titlebar .tb-version {
+      font-size: 10px; color: rgba(99,102,241,0.7);
+      background: rgba(99,102,241,0.1);
+      border: 1px solid rgba(99,102,241,0.2);
+      border-radius: 4px; padding: 1px 6px;
+    }
+    #electron-titlebar .win-btn {
+      -webkit-app-region: no-drag;
+      width: 28px; height: 22px;
+      border-radius: 5px; border: none;
+      background: rgba(255,255,255,0.05);
+      color: #94a3b8; font-size: 13px;
+      cursor: pointer; display: flex; align-items: center; justify-content: center;
+      transition: background 0.15s, color 0.15s;
+      font-family: 'Segoe UI', 'Tabler Icons', sans-serif;
+    }
+    #electron-titlebar .win-btn:hover { background: rgba(255,255,255,0.12); color: #e2e8f0; }
+    #electron-titlebar .win-btn.close:hover { background: #ef4444; color: #fff; }
+    body.electron-mode { padding-top: 38px; }
+    body.electron-mode .sb { top: 38px; height: calc(100vh - 38px); }
+    body.electron-mode .main { padding-top: 38px; }
+    body.electron-mode .topbar { top: 38px; }
+  </style>
+</head>
+<body>
+
+<!-- BARRE DE TITRE ELECTRON -->
+<div id="electron-titlebar">
+  <span class="tb-logo">🎮</span>
+  <span class="tb-name">RP Showroom — Panel Admin</span>
+  <span class="tb-version">v2.0</span>
+  <button class="win-btn" onclick="window.electronAPI?.minimize()" title="Réduire">－</button>
+  <button class="win-btn" onclick="window.electronAPI?.maximize()" title="Agrandir">□</button>
+  <button class="win-btn close" onclick="window.electronAPI?.close()" title="Fermer">✕</button>
+</div>
+
+<!-- LOGIN -->
+<div id="login-screen">
+  <div class="lc">
+    <div class="lc-logo">
+      <span id="l-icon">🎮</span>
+      <h1 id="l-title">RP Showroom</h1>
+      <p>Panel de gestion multi-bots</p>
+    </div>
+    <div id="l-setup" class="lc-notice" style="display:none">
+      <i class="ti ti-info-circle"></i> Premier accès — créez votre mot de passe admin
+    </div>
+    <div class="lc-field">
+      <label>Mot de passe</label>
+      <div class="lc-input">
+        <i class="ti ti-lock"></i>
+        <input type="password" id="l-pwd" placeholder="••••••••" onkeydown="if(event.key==='Enter')login()">
+        <button class="lc-eye" onclick="toggleEye('l-pwd',this)"><i class="ti ti-eye"></i></button>
+      </div>
+    </div>
+    <button class="lc-btn" onclick="login()"><i class="ti ti-arrow-right"></i> Accéder</button>
+    <div id="l-err" class="lc-err" style="display:none"></div>
+  </div>
+</div>
+
+<!-- APP -->
+<div id="app" style="display:none">
+  <aside class="sb">
+    <div class="sb-logo">
+      <div class="sb-icon" id="sb-icon">🎮</div>
+      <div><div class="sb-title" id="sb-title">RP Showroom</div><div class="sb-sub">Panel Admin</div></div>
+    </div>
+    <nav class="sb-nav">
+      <div class="sb-sec">Vue globale</div>
+      <a class="sb-link active" data-p="dashboard"><i class="ti ti-layout-dashboard"></i>Dashboard</a>
+      <a class="sb-link" data-p="activite"><i class="ti ti-activity"></i>Activité en direct<span class="sb-badge" id="b-act"></span></a>
+      <a class="sb-link" data-p="alertes"><i class="ti ti-bell"></i>Alertes<span class="sb-badge err" id="b-alert"></span></a>
+      <a class="sb-link" data-p="instances"><i class="ti ti-robot"></i>Mes bots<span class="sb-badge" id="b-bots"></span></a>
+      <a class="sb-link" data-p="logs"><i class="ti ti-terminal-2"></i>Logs</a>
+      <div class="sb-sec">Aperçu</div>
+      <a class="sb-link" data-p="demo-restauration"><i class="ti ti-fork"></i>Aperçu Restauration</a>
+      <a class="sb-link" data-p="demo-custom"><i class="ti ti-tool"></i>Aperçu Custom</a>
+      <div class="sb-sec">Paramètres</div>
+      <a class="sb-link" data-p="settings"><i class="ti ti-settings"></i>Panel</a>
+      <a class="sb-link" data-p="securite"><i class="ti ti-shield-lock"></i>Sécurité</a>
+    </nav>
+    <div class="sb-foot">
+      <div class="sb-health" id="sb-health"><span class="h-dot gray"></span><span id="h-label">—</span></div>
+      <button class="sb-logout" onclick="doLogout()"><i class="ti ti-logout"></i></button>
+    </div>
+  </aside>
+
+  <div class="main">
+    <header class="topbar">
+      <span class="tb-title" id="tb-title">Dashboard</span>
+      <div style="display:flex;gap:8px">
+        <button class="tb-btn" onclick="refreshPage()" title="Actualiser"><i class="ti ti-refresh" id="refresh-ic"></i></button>
+      </div>
+    </header>
+    <div class="content" id="content"></div>
+  </div>
+</div>
+
+<!-- MODAL -->
+<div id="modal-back" style="display:none" onclick="if(event.target===this)closeModal()">
+  <div class="modal" id="modal-box">
+    <div class="modal-head">
+      <span id="modal-title" class="modal-title"></span>
+      <button class="tb-btn" onclick="closeModal()"><i class="ti ti-x"></i></button>
+    </div>
+    <div class="modal-body" id="modal-body"></div>
+  </div>
+</div>
+
+<div id="toasts"></div>
+<script src="/js/main.js"></script>
+<script>
+  // Activer la titlebar et le mode Electron si on est dans l'app
+  if (window.electronAPI?.isElectron) {
+    document.body.classList.add('electron-mode')
+    document.getElementById('electron-titlebar').style.display = 'flex'
+  }
+</script>
+</body>
+</html>
